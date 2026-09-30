@@ -1,45 +1,37 @@
 class Solution {
     public int splitArray(int[] nums, int k) {
-        int low = 0;
-        int high = 0;
-
-        for (int num : nums) {
-            low = Math.max(low, num);
-            high += num;
-        }
-
-        int result = high;
-
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-
-            if (canSplit(nums, k, mid)) {
-                result = mid;
-                high = mid - 1; // Try finding a smaller maximum sum
-            } else {
-                low = mid + 1;  // Increase search space
+         int n = nums.length;
+         int low = Arrays.stream(nums).max().getAsInt();
+         int high = 0;
+         for(int piece:nums){
+            high += piece;
+         }
+         int ans = high;
+         while(low <= high){
+            int mid = low + (high - low)/2;
+            if(possible(nums,k,mid)){
+               ans = mid;
+               high = mid - 1;
+            }else{
+               low = mid + 1;
             }
-        }
-
-        return result;
+         }
+            return ans;
     }
-
-    private boolean canSplit(int[] nums, int k, int maxSum) {
-        int count = 1;
-        int currentSum = 0;
-
-        for (int num : nums) {
-            if (currentSum + num > maxSum) {
-                count++;
-                currentSum = num;
-                if (count > k) {
-                    return false;
-                }
-            } else {
-                currentSum += num;
+    public boolean possible(int[] nums, int k, int mid){
+         int sub = 1;
+         int sum = 0;
+         for(int i = 0;i < nums.length;i++){
+            if(sum+ nums[i] > mid){
+                sub++;
+                sum = nums[i];
+            }else{
+                sum += nums[i];
             }
-        }
-
-        return true;
+            if(sub > k){
+                return false;
+            }
+         }
+         return true;
     }
 }
